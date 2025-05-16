@@ -82,6 +82,13 @@
       <option value="farnham">Farnham GC</option>
     </select>
 
+    <label for="holes">Holes:</label>
+    <select id="holes">
+      <option value="18">18 Holes</option>
+      <option value="F9">Front 9</option>
+      <option value="B9">Back 9</option>
+    </select>
+
     <label for="format">Match Format:</label>
     <select id="format" onchange="togglePlayers()">
       <option value="fourball">Fourball (90%)</option>
@@ -118,49 +125,68 @@
   </div>
 
   <script>
-    // Define club and tee data
+    // Club and tee data with 18, front/back splits
     const clubs = {
       hindhead: {
-        silver: { slope: 121, cr: 69.9, par: 70, name: 'Silver' },
-        navy:   { slope: 125, cr: 71.3, par: 70, name: 'Navy' }
+        silver: {
+          name: 'Silver',
+          '18': { slope: 121, cr: 69.9, par: 70 },
+          F9:   { slope: 119, cr: 34.7, par: 35 },
+          B9:   { slope: 123, cr: 35.2, par: 35 }
+        },
+        navy: {
+          name: 'Navy',
+          '18': { slope: 125, cr: 71.3, par: 70 },
+          F9:   { slope: 126, cr: 35.6, par: 35 },
+          B9:   { slope: 125, cr: 35.6, par: 35 }
+        }
       },
       farnham: {
-        silver: { slope: 136, cr: 72.5, par: 72, name: 'Silver' },
-        purple: { slope: 130, cr: 70.8, par: 72, name: 'Purple' }
+        silver: {
+          name: 'Silver',
+          '18': { slope: 136, cr: 72.5, par: 72 },
+          F9:   { slope: 131, cr: 35.3, par: 35 },
+          B9:   { slope: 140, cr: 37.2, par: 37 }
+        },
+        purple: {
+          name: 'Purple',
+          '18': { slope: 130, cr: 70.8, par: 72 },
+          F9:   { slope: 128, cr: 34.8, par: 35 },
+          B9:   { slope: 132, cr: 36.0, par: 37 }
+        }
       }
     };
 
-    // Populate tee selects based on chosen club
+    // Populate tee dropdowns based on selected club
     function populateTees() {
       const clubKey = document.getElementById('club').value;
       const tees = clubs[clubKey];
-      const teeOptions = Object.entries(tees)
-        .map(([key, data]) => `<option value="${key}">${data.name}</option>`)
+      const options = Object.entries(tees)
+        .map(([key, t]) => `<option value="${key}">${t.name}</option>`)
         .join('');
-
       ['tee1','tee2','tee3','tee4'].forEach(id => {
-        document.getElementById(id).innerHTML = teeOptions;
+        document.getElementById(id).innerHTML = options;
       });
     }
 
-    // Toggle player inputs and repopulate tees
+    // Show/hide players based on format
     function togglePlayers() {
-      populateTees();
       const format = document.getElementById('format').value;
       const isSingles = format === 'matchplay';
       document.getElementById('player3').style.display = isSingles ? 'none' : 'flex';
       document.getElementById('player4').style.display = isSingles ? 'none' : 'flex';
     }
 
-    // Calculate course handicap for an index and tee
-    function calculateCourseHandicap(index, clubKey, teeKey) {
-      const { slope, cr, par } = clubs[clubKey][teeKey];
+    // Compute course handicap for chosen tee and holes
+    function calculateCourseHandicap(index, clubKey, teeKey, holesKey) {
+      const { slope, cr, par } = clubs[clubKey][teeKey][holesKey];
       return index * (slope / 113) + (cr - par);
     }
 
-    // Main calculation flow
+    // Main calculation
     function calculate() {
       const clubKey = document.getElementById('club').value;
+      const holesKey = document.getElementById('holes').value;
       const format = document.getElementById('format').value;
       const isSingles = format === 'matchplay';
 
@@ -177,44 +203,48 @@
         isSingles ? null : document.getElementById('tee4').value
       ];
 
-      const count = isSingles ? 2 : 4;
-      if (hi.slice(0, count).some(h => isNaN(h))) {
+      const needed = isSingles ? 2 : 4;
+      if (hi.slice(0, needed).some(h => isNaN(h))) {
         document.getElementById('result').innerText = "Please enter all handicaps.";
         return;
       }
 
-      const ch = hi.map((h, i) => h !== null ? Math.round(calculateCourseHandicap(h, clubKey, tees[i])) : null);
-      let output = `<p>Course Handicaps: ${ch.filter(v => v !== null).join(' / ')}</p>`;
+      // Calculate course handicaps
+      const ch = hi.map((h, i) => h !== null
+        ? Math.round(calculateCourseHandicap(h, clubKey, tees[i], holesKey))
+        : null
+      );
+      let output = `<p>Course Handicap (${holesKey === '18' ? '18 holes' : holesKey === 'F9' ? 'Front 9' : 'Back 9'}): ${ch.filter(v=>v!==null).join(' / ')}</p>`;
 
       if (format === 'fourball') {
         const ph = ch.map(x => x !== null ? Math.round(x * 0.9) : null);
-        const min = Math.min(...ph.filter(x => x !== null));
-        const shots = ph.map(p => p !== null ? p - min : null);
+        const min = Math.min(...ph.filter(x=>x!==null));
+        const shots = ph.map(p => p!==null ? p - min : null);
         output += `<p>Playing Handicaps (90%): ${ph.join(' / ')}</p>`;
-        output += `<p>Strokes Received (vs lowest): ${shots.join(' / ')}</p>`;
+        output += `<p>Strokes Received: ${shots.join(' / ')}</p>`;
       } else if (format === 'foursomes') {
-        const a = Math.round((ch[0] + ch[1]) * 0.5);
-        const b = Math.round((ch[2] + ch[3]) * 0.5);
-        const min = Math.min(a, b);
+        const a = Math.round((ch[0]+ch[1]) * 0.5);
+        const b = Math.round((ch[2]+ch[3]) * 0.5);
+        const min = Math.min(a,b);
         output += `<p>Team A: ${a}, Team B: ${b}</p>`;
-        output += `<p>Strokes Received: A ${a - min}, B ${b - min}</p>`;
+        output += `<p>Strokes Received: A ${a-min}, B ${b-min}</p>`;
       } else if (format === 'greensomes') {
-        const a = Math.round(ch[0] * 0.6 + ch[1] * 0.4);
-        const b = Math.round(ch[2] * 0.6 + ch[3] * 0.4);
-        const min = Math.min(a, b);
+        const a = Math.round(ch[0]*0.6 + ch[1]*0.4);
+        const b = Math.round(ch[2]*0.6 + ch[3]*0.4);
+        const min = Math.min(a,b);
         output += `<p>Team A: ${a}, Team B: ${b}</p>`;
-        output += `<p>Strokes Received: A ${a - min}, B ${b - min}</p>`;
+        output += `<p>Strokes Received: A ${a-min}, B ${b-min}</p>`;
       } else if (format === 'matchplay') {
-        const min = Math.min(ch[0], ch[1]);
-        const shots = [ch[0] - min, ch[1] - min];
+        const min = Math.min(ch[0],ch[1]);
+        const shots = [ch[0]-min, ch[1]-min];
         output += `<p>Playing Handicaps (100%): ${ch[0]} / ${ch[1]}</p>`;
-        output += `<p>Strokes Received (vs lowest): ${shots.join(' / ')}</p>`;
+        output += `<p>Strokes Received: ${shots.join(' / ')}</p>`;
       }
 
       document.getElementById('result').innerHTML = output;
     }
 
-    // On load, populate tees for default club then set player visibility
+    // Initialize on page load
     window.onload = () => {
       populateTees();
       togglePlayers();
