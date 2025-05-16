@@ -70,6 +70,23 @@
       background: #f0f4ff;
       border-left: 5px solid #f3d350;
     }
+
+    /* Mobile responsiveness */
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+      }
+      .player-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+      .player-row label {
+        text-align: left;
+        width: auto;
+        margin-bottom: 0.25rem;
+      }
+    }
   </style>
 </head>
 <body>
