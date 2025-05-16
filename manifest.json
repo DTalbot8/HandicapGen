@@ -7,14 +7,22 @@
   "theme_color": "f3d350",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "icons/DDGolf.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "icons/DDGolf.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/DDHomePage.png",
+      "sizes": "1024x512",
+      "type": "image/png",
+      "platform": "web"
     }
   ]
 }

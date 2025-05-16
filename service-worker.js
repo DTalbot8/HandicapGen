@@ -2,6 +2,7 @@ const CACHE_NAME = 'handicap-cache-v1';
 const FILES_TO_CACHE = [
   './',
   './index.html',
+  './calculator.html',
   './manifest.json',
   './style.css',      // if you split out CSS
   './script.js',      // or inline your JS here
