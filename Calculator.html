@@ -31,33 +31,14 @@
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
-    .header-logo {
-      width: 48px;
-      height: auto;
-    }
-    h2 {
-      font-size: 1.8rem;
-      color: #0A7E07;
-      font-weight: 600;
-    }
-    label {
-      font-weight: 600;
-      display: block;
-      margin-top: 1rem;
-      color: #0A7E07;
-    }
+    .header-logo { width: 48px; height: auto; }
+    h2 { font-size: 1.8rem; color: #0A7E07; font-weight: 600; }
+    label { font-weight: 600; display: block; margin-top: 1rem; color: #0A7E07; }
     input, select {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      margin-top: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-      line-height: 1.4;
-      background: #fff;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
+      width: 100%; padding: 0.75rem 1rem; margin-top: 0.5rem;
+      border: 1px solid #ccc; border-radius: 6px;
+      font-size: 1rem; line-height: 1.4; background: #fff;
+      appearance: none; -webkit-appearance: none; -moz-appearance: none;
     }
     .player-row {
       display: flex;
@@ -65,43 +46,38 @@
       gap: 1rem;
       margin-top: 1rem;
     }
-    .player-row label {
-      width: 100px;
-      text-align: right;
-      margin-top: 0;
-    }
+    .player-row label { width: 100px; text-align: right; margin-top: 0; }
     h3 {
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      color: #0A7E07;
-      font-size: 1.125rem;
-      font-weight: 600;
+      margin-top: 2rem; margin-bottom: 1rem;
+      color: #0A7E07; font-size: 1.125rem; font-weight: 600;
     }
     button {
-      width: 100%;
-      padding: 0.75rem;
-      margin-top: 2rem;
-      background: #0A7E07;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
+      width: 100%; padding: 0.75rem; margin-top: 2rem;
+      background: #0A7E07; color: #fff; border: none;
+      border-radius: 6px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
     }
     button:hover { background: #066007; }
     .result {
-      margin-top: 2rem;
-      padding: 1rem;
-      background: #f0f4ff;
-      border-left: 5px solid #0A7E07;
+      display: none;
+      margin-top: 2rem; padding: 1rem;
+      background: #f0f4ff; border-left: 5px solid #0A7E07;
       border-radius: 4px;
     }
+    .hidden { display: none; }
     @media (max-width: 480px) {
       body { padding: 1rem; }
-      .player-row { flex-direction: column; align-items: stretch; }
-      .player-row label { text-align: left; width: auto; }
+      /* Use CSS grid for player rows on small screens */
+      .player-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "input select";
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      .player-row label { display: none; }
+      .player-row input { grid-area: input; }
+      .player-row select { grid-area: select; }
     }
   </style>
 </head>
@@ -111,133 +87,80 @@
       <img src="icons/DDGolf.png" alt="Logo" class="header-logo">
       <h2>Handicap Calculator</h2>
     </div>
-
-    <label for="club">Golf Club:</label>
-    <select id="club" onchange="populateTees()">
-      <option value="hindhead">Hindhead GC</option>
-      <option value="farnham">Farnham GC</option>
-    </select>
-
-    <label for="holes">Holes:</label>
-    <select id="holes">
-      <option value="18">18 Holes</option>
-      <option value="F9">Front 9</option>
-      <option value="B9">Back 9</option>
-    </select>
-
-    <label for="format">Match Format:</label>
-    <select id="format" onchange="togglePlayers()">
-      <option value="fourball">Fourball (90%)</option>
-      <option value="foursomes">Foursomes (50%) combined</option>
-      <option value="greensomes">Greensomes (60/40 split)</option>
-      <option value="matchplay">Singles Matchplay (100%)</option>
-    </select>
-
-    <h3>Player Handicaps & Tee Selection</h3>
-    <div id="player1" class="player-row">
-      <label>Player 1:</label>
-      <input type="number" step="0.1" id="p1" placeholder="Handicap Index">
-      <select id="tee1"></select>
+    <div id="input-section">
+      <label for="club">Golf Club:</label>
+      <select id="club" onchange="populateTees()">
+        <option value="hindhead">Hindhead GC</option>
+        <option value="farnham">Farnham GC</option>
+      </select>
+      <label for="holes">Holes:</label>
+      <select id="holes">
+        <option value="18">18 Holes</option>
+        <option value="F9">Front 9</option>
+        <option value="B9">Back 9</option>
+      </select>
+      <label for="format">Match Format:</label>
+      <select id="format" onchange="togglePlayers()">
+        <option value="fourball">Fourball (90%)</option>
+        <option value="foursomes">Foursomes (50%) combined</option>
+        <option value="greensomes">Greensomes (60/40 split)</option>
+        <option value="matchplay">Singles Matchplay (100%)</option>
+      </select>
+      <h3>Handicap/Tee Selection</h3>
+      <div id="player1" class="player-row">
+        <label>Player 1:</label>
+        <input type="number" step="0.1" id="p1" placeholder="H'Cap Index">
+        <select id="tee1"></select>
+      </div>
+      <div id="player2" class="player-row">
+        <label>Player 2:</label>
+        <input type="number" step="0.1" id="p2" placeholder="H'Cap Index">
+        <select id="tee2"></select>
+      </div>
+      <div id="player3" class="player-row">
+        <label>Player 3:</label>
+        <input type="number" step="0.1" id="p3" placeholder="H'Cap Index">
+        <select id="tee3"></select>
+      </div>
+      <div id="player4" class="player-row">
+        <label>Player 4:</label>
+        <input type="number" step="0.1" id="p4" placeholder="H'Cap Index">
+        <select id="tee4"></select>
+      </div>
+      <button id="calculateBtn" onclick="calculate()">Calculate Handicaps</button>
     </div>
-    <div id="player2" class="player-row">
-      <label>Player 2:</label>
-      <input type="number" step="0.1" id="p2" placeholder="Handicap Index">
-      <select id="tee2"></select>
-    </div>
-    <div id="player3" class="player-row">
-      <label>Player 3:</label>
-      <input type="number" step="0.1" id="p3" placeholder="Handicap Index">
-      <select id="tee3"></select>
-    </div>
-    <div id="player4" class="player-row">
-      <label>Player 4:</label>
-      <input type="number" step="0.1" id="p4" placeholder="Handicap Index">
-      <select id="tee4"></select>
-    </div> 
-
-    <button onclick="calculate()">Calculate Handicaps</button>
-
     <div id="result" class="result"></div>
   </div>
-
   <script>
-    // Club and tee data with 18, front/back splits
-    const clubs = {
-      hindhead: {
-        silver: { name: 'Silver', '18': { slope:121, cr:69.9, par:70 }, F9:{slope:119,cr:34.7,par:35}, B9:{slope:123,cr:35.2,par:35} },
-        navy:   { name: 'Navy', '18': { slope:125, cr:71.3, par:70 }, F9:{slope:126,cr:35.6,par:35}, B9:{slope:125,cr:35.6,par:35} }
-      },
-      farnham: {
-        silver: { name:'Silver', '18':{slope:136,cr:72.5,par:72},F9:{slope:131,cr:35.3,par:35},B9:{slope:140,cr:37.2,par:37} },
-        purple: { name:'Purple', '18':{slope:130,cr:70.8,par:72},F9:{slope:128,cr:34.8,par:35},B9:{slope:132,cr:36.0,par:37} }
+    const clubs = { hindhead: { silver:{name:'Silver','18':{slope:121,cr:69.9,par:70},F9:{slope:119,cr:34.7,par:35},B9:{slope:123,cr:35.2,par:35}},navy:{name:'Navy','18':{slope:125,cr:71.3,par:70},F9:{slope:126,cr:35.6,par:35},B9:{slope:125,cr:35.6,par:35}}}, farnham:{ silver:{name:'Silver','18':{slope:136,cr:72.5,par:72},F9:{slope:131,cr:35.3,par:35},B9:{slope:140,cr:37.2,par:37}}, purple:{name:'Purple','18':{slope:130,cr:70.8,par:72},F9:{slope:128,cr:34.8,par:35},B9:{slope:132,cr:36,par:37}}} };
+    function populateTees(){ const t=document.getElementById('club').value; const o=Object.entries(clubs[t]).map(([k,d])=>`<option value="${k}">${d.name}</option>`).join(''); ['tee1','tee2','tee3','tee4'].forEach(id=>document.getElementById(id).innerHTML=o);}    
+    function togglePlayers(){ const show=document.getElementById('format').value!=='matchplay'; ['player3','player4'].forEach(id=>document.getElementById(id).style.display=show?'flex':'none'); }
+    function calculateCourseHandicap(h,tC,tK,hK){ let r=h*(clubs[tC][tK][hK].slope/113)+(clubs[tC][tK][hK].cr-clubs[tC][tK][hK].par); return hK!=='18'?r/2:r; }
+    function calculate(){
+      const tC=document.getElementById('club').value, hK=document.getElementById('holes').value, fmt=document.getElementById('format').value;
+      const isSP=fmt==='matchplay';
+      const hi=[parseFloat(p1.value),parseFloat(p2.value),isSP?null:parseFloat(p3.value),isSP?null:parseFloat(p4.value)];
+      const tees=['tee1','tee2','tee3','tee4'].map(id=>document.getElementById(id).value);
+      if(hi.slice(0,isSP?2:4).some(h=>isNaN(h))){alert('Please fill all handicaps.');return;}
+      document.getElementById('input-section').classList.add('hidden');
+      const ch=hi.map((h,i)=>h!==null?Math.round(calculateCourseHandicap(h,tC,tees[i],hK)):null);
+      let res=`<p>Course Handicap (${hK==='18'?'18 holes':hK==='F9'?'Front 9':'Back 9'}): ${ch.filter(x=>x!==null).join(' / ')}</p>`;
+      if(fmt==='fourball'){ const ph=ch.map(x=>x!==null?Math.round(x*0.9):null),m=Math.min(...ph.filter(x=>x!==null)),st=ph.map(x=>x!==null?x-m:null);
+        res+=`<p>Playing Handicaps (90%): ${ph.join(' / ')}</p><p>Strokes Received: ${st.join(' / ')}</p>`;
+      }else if(fmt==='foursomes'){ const a=Math.round((ch[0]+ch[1])/2),b=Math.round((ch[2]+ch[3])/2),m=Math.min(a,b);
+        res+=`<p>Team A: ${a}, Team B: ${b}</p><p>Strokes Received: A ${a-m}, B ${b-m}</p>`;
+      }else if(fmt==='greensomes'){ const a=Math.round(ch[0]*0.6+ch[1]*0.4),b=Math.round(ch[2]*0.6+ch[3]*0.4),m=Math.min(a,b);
+        res+=`<p>Team A: ${a}, Team B: ${b}</p><p>Strokes Received: A ${a-m}, B ${b-m}</p>`;
+      }else{ const m=Math.min(ch[0],ch[1]),s=[ch[0]-m,ch[1]-m];
+        res+=`<p>Playing Handicaps (100%): ${ch[0]} / ${ch[1]}</p><p>Strokes Received: ${s.join(' / ')}</p>`;
       }
-    };
-
-    function populateTees() {
-      const clubKey = document.getElementById('club').value;
-      const options = Object.entries(clubs[clubKey])
-        .map(([key, data]) => `<option value="${key}">${data.name}</option>`)
-        .join('');
-      ['tee1','tee2','tee3','tee4'].forEach(id => document.getElementById(id).innerHTML = options);
+      res+=`<button onclick="document.getElementById('input-section').classList.remove('hidden');document.getElementById('result').classList.remove('result');document.getElementById('result').classList.add('hidden');document.getElementById('result').innerHTML='';">Edit Inputs</button>`;
+      const resultEl=document.getElementById('result'); resultEl.innerHTML=res; resultEl.classList.remove('hidden');
     }
-
-    function togglePlayers() {
-      const isSingles = document.getElementById('format').value === 'matchplay';
-      ['player3','player4'].forEach(id => document.getElementById(id).style.display = isSingles ? 'none' : 'flex');
-    }
-
-    function calculateCourseHandicap(index, clubKey, teeKey, holesKey) {
-      let raw = index * (clubs[clubKey][teeKey][holesKey].slope / 113)
-              + (clubs[clubKey][teeKey][holesKey].cr - clubs[clubKey][teeKey][holesKey].par);
-      return holesKey !== '18' ? raw / 2 : raw;
-    }
-
-    function calculate() {
-      const clubKey = document.getElementById('club').value;
-      const holesKey = document.getElementById('holes').value;
-      const format = document.getElementById('format').value;
-      const isSingles = format === 'matchplay';
-      const hi = [
-        parseFloat(document.getElementById('p1').value),
-        parseFloat(document.getElementById('p2').value),
-        isSingles ? null : parseFloat(document.getElementById('p3').value),
-        isSingles ? null : parseFloat(document.getElementById('p4').value)
-      ];
-      const tees = ['tee1','tee2','tee3','tee4'].map(id => document.getElementById(id).value);
-      if (hi.slice(0, isSingles ? 2 : 4).some(h => isNaN(h))) {
-        document.getElementById('result').innerText = 'Please enter all handicaps.';
-        return;
-      }
-      const ch = hi.map((h,i) => h !== null ? Math.round(calculateCourseHandicap(h,clubKey,tees[i],holesKey)) : null);
-      let output = `<p>Course Handicap (${holesKey==='18'?'18 holes':holesKey==='F9'?'Front 9':'Back 9'}): ${ch.filter(x=>x!==null).join(' / ')}</p>`;
-      if (format==='fourball') {
-        const ph = ch.map(x=>x!==null?Math.round(x*0.9):null), m=Math.min(...ph.filter(x=>x!==null));
-        output += `<p>Playing Handicaps (90%): ${ph.join(' / ')}</p><p>Strokes Received: ${ph.map(x=>x!==null?x-m:null).join(' / ')}</p>`;
-      } else if (format==='foursomes') {
-        const a=Math.round((ch[0]+ch[1])*0.5),b=Math.round((ch[2]+ch[3])*0.5),m=Math.min(a,b);
-        output += `<p>Team A: ${a}, Team B: ${b}</p><p>Strokes Received: A ${a-m}, B ${b-m}</p>`;
-      } else if (format==='greensomes') {
-        const a=Math.round(ch[0]*0.6+ch[1]*0.4),b=Math.round(ch[2]*0.6+ch[3]*0.4),m=Math.min(a,b);
-        output += `<p>Team A: ${a}, Team B: ${b}</p><p>Strokes Received: A ${a-m}, B ${b-m}</p>`;
-      } else if (format==='matchplay') {
-        const m=Math.min(ch[0],ch[1]),s=[ch[0]-m,ch[1]-m];
-        output += `<p>Playing Handicaps (100%): ${ch[0]} / ${ch[1]}</p><p>Strokes Received: ${s.join(' / ')}</p>`;
-      }
-      document.getElementById('result').innerHTML=output;
-    }
-
     window.onload=()=>{populateTees();togglePlayers();};
   </script>
-
-  <!-- Service Worker Registration -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(reg => console.log('SW registered:', reg.scope))
-          .catch(err => console.error('SW registration failed:', err));
-      });
-    }
+    if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').then(r=>console.log('SW registered:',r.scope)).catch(e=>console.error('SW failed:',e));});}
   </script>
 </body>
 </html>
