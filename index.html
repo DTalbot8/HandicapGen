@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="f3d350">
+
   <title>2v2 Handicap Calculator</title>
   <style>
     body {
@@ -174,7 +177,6 @@
       }
     };
 
-    // Populate tee dropdowns based on selected club
     function populateTees() {
       const clubKey = document.getElementById('club').value;
       const tees = clubs[clubKey];
@@ -186,7 +188,6 @@
       });
     }
 
-    // Show/hide players based on format
     function togglePlayers() {
       const format = document.getElementById('format').value;
       const isSingles = format === 'matchplay';
@@ -194,16 +195,13 @@
       document.getElementById('player4').style.display = isSingles ? 'none' : 'flex';
     }
 
-    // Compute course handicap for chosen tee and holes
     function calculateCourseHandicap(index, clubKey, teeKey, holesKey) {
       const { slope, cr, par } = clubs[clubKey][teeKey][holesKey];
       let raw = index * (slope / 113) + (cr - par);
-      // For 9-hole courses, halve the raw handicap
       if (holesKey !== '18') raw = raw / 2;
       return raw;
     }
 
-    // Main calculation
     function calculate() {
       const clubKey = document.getElementById('club').value;
       const holesKey = document.getElementById('holes').value;
@@ -229,7 +227,6 @@
         return;
       }
 
-      // Calculate course handicaps, rounding after halving
       const ch = hi.map((h, i) => h !== null
         ? Math.round(calculateCourseHandicap(h, clubKey, tees[i], holesKey))
         : null
@@ -264,11 +261,21 @@
       document.getElementById('result').innerHTML = output;
     }
 
-    // Initialize on page load
     window.onload = () => {
       populateTees();
       togglePlayers();
     };
+  </script>
+
+  <!-- Service worker registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(reg => console.log('SW registered:', reg.scope))
+          .catch(err => console.error('SW registration failed:', err));
+      });
+    }
   </script>
 </body>
 </html>
