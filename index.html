@@ -20,40 +20,34 @@
       align-items: center;
       justify-content: center;
       color: #333;
-      position: relative;
-    }
-    .page-logo {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      width: 36px;
-      height: auto;
+      margin: 0;
     }
     .card {
+      position: relative;
       background: #ffffff;
       border-radius: 16px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
       max-width: 380px;
       width: 90%;
-      padding: 0;
+      padding: 3rem 2rem 2rem;   /* increased top padding to clear logo */   /* reduced top padding */
       text-align: center;
-      overflow: hidden;
       animation: fadeIn 0.8s ease-out;
     }
-    .banner {
-      width: 100%;
-      height: auto;
+    .logo-inline {
       display: block;
-      object-fit: cover;
-    }
-    .content {
-      padding: 2rem;
+      margin: 0 auto 1rem;  /* centered above title with spacing */
+      width: 54px;
+      height: auto;
+      background: #fff;
+      padding: 0.25rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     h1 {
       font-size: 1.75rem;
-      margin-bottom: 0.5rem;
       font-weight: 700;
       color: #0A7E07;
+      margin-bottom: 0.75rem;
     }
     p {
       font-size: 1rem;
@@ -82,17 +76,13 @@
   </style>
 </head>
 <body>
-  <!-- small logo top-left -->
-  <img src="icons/DDGolf.png" alt="Logo" class="page-logo">
-
   <div class="card">
-    <img src="icons/DDHomePage.png" alt="Handicap Calculator Banner" class="banner">
-    <div class="content">
-      <h1>Handicap Calculator</h1>
-      <p>Easily compute your playing handicaps for Fourball, Foursomes, Greensomes, or Matchplay. Ready to tee off?</p>
-      <a href="calculator.html" class="btn">Go to Calculator</a>
-    </div>
+    <img src="icons/DDGolf.png" alt="Logo" class="logo-inline">
+    <h1>Handicap Calculator</h1>
+    <p>Easily compute your playing handicaps for Fourball, Foursomes, Greensomes, or Matchplay. Ready to tee off?</p>
+    <a href="calculator.html" class="btn">Go to Calculator</a>
   </div>
+
   <!-- Service worker registration -->
   <script>
     if ('serviceWorker' in navigator) {
