@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f9f9fb;
+      background: #f9ffb;
       margin: 0;
       padding: 2rem;
       color: #333;
@@ -23,10 +23,10 @@
     h2 {
       text-align: center;
       margin-bottom: 1.5rem;
-      color: #a39b48;
+      color: #f3d350;
     }
     h3 {
-      color: #a39b48;
+      color: #f3d350;
     }
     label {
       font-weight: 600;
@@ -51,7 +51,7 @@
       align-self: center;
     }
     button {
-      background: #a39b48;
+      background: #f3d350;
       color: white;
       padding: 0.75rem 1.25rem;
       border: none;
@@ -62,13 +62,13 @@
       margin-top: 1rem;
     }
     button:hover {
-      background: #8e883c;
+      background: #e0c442;
     }
     .result {
       margin-top: 2rem;
       padding: 1rem;
       background: #f0f4ff;
-      border-left: 5px solid #a39b48;
+      border-left: 5px solid #f3d350;
     }
   </style>
 </head>
@@ -180,7 +180,10 @@
     // Compute course handicap for chosen tee and holes
     function calculateCourseHandicap(index, clubKey, teeKey, holesKey) {
       const { slope, cr, par } = clubs[clubKey][teeKey][holesKey];
-      return index * (slope / 113) + (cr - par);
+      let raw = index * (slope / 113) + (cr - par);
+      // For 9-hole courses, halve the raw handicap
+      if (holesKey !== '18') raw = raw / 2;
+      return raw;
     }
 
     // Main calculation
@@ -209,7 +212,7 @@
         return;
       }
 
-      // Calculate course handicaps
+      // Calculate course handicaps, rounding after halving
       const ch = hi.map((h, i) => h !== null
         ? Math.round(calculateCourseHandicap(h, clubKey, tees[i], holesKey))
         : null
