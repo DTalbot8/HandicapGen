@@ -4,28 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="f3d350">
+  <meta name="theme-color" content="#0A7E07">
 
   <title>Welcome | Handicap Calculator</title>
   <style>
-    /* Import a modern sans-serif */
+    /* Modern golf-inspired palette */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #f3d350 0%, f9ffb 100%);
+      background: linear-gradient(135deg, #79C753 0%, #A9D18D 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #333;
+      position: relative;
+    }
+    .page-logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      width: 36px;
+      height: auto;
     }
     .card {
-      background: #fff;
+      background: #ffffff;
       border-radius: 16px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-      max-width: 400px;
+      max-width: 380px;
       width: 90%;
       padding: 0;
       text-align: center;
@@ -45,26 +53,27 @@
       font-size: 1.75rem;
       margin-bottom: 0.5rem;
       font-weight: 700;
-      color: #f3d350;
+      color: #0A7E07;
     }
     p {
       font-size: 1rem;
       margin-bottom: 1.5rem;
       line-height: 1.5;
+      color: #555;
     }
     .btn {
       display: inline-block;
-      background: #f3d350;
+      background: #0A7E07;
       color: #fff;
       text-decoration: none;
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
       font-weight: 600;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: background 0.2s, transform 0.2s;
     }
     .btn:hover {
+      background: #066007;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
@@ -73,12 +82,15 @@
   </style>
 </head>
 <body>
+  <!-- small logo top-left -->
+  <img src="icons/DDGolf.png" alt="Logo" class="page-logo">
+
   <div class="card">
     <img src="icons/DDHomePage.png" alt="Handicap Calculator Banner" class="banner">
     <div class="content">
       <h1>Handicap Calculator</h1>
       <p>Easily compute your playing handicaps for Fourball, Foursomes, Greensomes, or Matchplay. Ready to tee off?</p>
-      <a href="Calculator.html" class="btn">Go to Calculator</a>
+      <a href="calculator.html" class="btn">Go to Calculator</a>
     </div>
   </div>
   <!-- Service worker registration -->
