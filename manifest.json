@@ -3,7 +3,7 @@
   "short_name": "HandicapCalc",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "f9ffb",
+  "background_color": "F2F2F7",
   "theme_color": "f3d350",
   "icons": [
     {
