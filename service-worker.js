@@ -1,25 +1,27 @@
+// service-worker.js
 const CACHE_NAME = 'handicap-cache-v1';
-const FILES_TO_CACHE = [
-  './',
-  './index.html',
-  './calculator.html',
-  './manifest.json',
-  './style.css',      // if you split out CSS
-  './script.js',      // or inline your JS here
-  './icons/DDGolf.png',
-  './icons/DDGolf.png'
+const ASSETS = [
+  './',                // index.html
+  'index.html',
+  'css/style.css',
+  'js/ui.js',
+  'js/calc.js',
+  'icons/DDGolf.png',
+  'manifest.json'
 ];
 
-self.addEventListener('install', evt => {
-  evt.waitUntil(
+// Install: cache all assets
+self.addEventListener('install', event => {
+  event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(FILES_TO_CACHE))
+      .then(cache => cache.addAll(ASSETS))
       .then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener('activate', evt => {
-  evt.waitUntil(
+// Activate: clean up old caches
+self.addEventListener('activate', event => {
+  event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
         keys.filter(key => key !== CACHE_NAME)
@@ -30,9 +32,10 @@ self.addEventListener('activate', evt => {
   self.clients.claim();
 });
 
-self.addEventListener('fetch', evt => {
-  evt.respondWith(
-    caches.match(evt.request)
-      .then(resp => resp || fetch(evt.request))
+// Fetch: serve from cache first, then network
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(cached => cached || fetch(event.request))
   );
 });
