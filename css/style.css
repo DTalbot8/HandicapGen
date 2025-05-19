@@ -141,6 +141,12 @@ button:hover {
   font-weight: 600;
   color: var(--text-secondary);
 }
+.shots-per-hole td.has-stroke {
+  color: var(--accent-highlight) !important;
+  font-weight: 600;
+}
+
+
 
 @media (max-width: 480px) {
   body {
